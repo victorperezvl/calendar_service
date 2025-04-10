@@ -21,10 +21,10 @@ const getRefreshToken = async (googleId) => {
     }
 };
 
-const insertUser = async (googleId, refreshToken) => {
+const insertUser = async (googleId, refresh_token) => {
     try {
         const [result] = await db.execute ('INSERT INTO users (google_id, refresh_token) VALUES ?, ?', 
-            [googleId, refreshToken]
+            [googleId, refresh_token]
         )
     } catch (err) {
         throw err;
