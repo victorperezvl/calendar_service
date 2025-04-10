@@ -14,13 +14,10 @@ const auth = (req, res) => {
 
 const callback = async (req, res) => {
     const {code} = req.query;
-    console.log('Código de autorización:', code);
 
     try {
         const { tokens } = await oAuth2Client.getToken(code);
-        console.log('Tokens obtenidos:', tokens);
         const { refresh_token } = tokens;
-
         oAuth2Client.setCredentials(tokens);
 
         const people = google.people({ version: 'v1', auth: oAuth2Client });
@@ -31,13 +28,6 @@ const callback = async (req, res) => {
         const googleId = profileResponse.data.resourceName;
         const displayName = profileResponse.data.names && profileResponse.data.names[0] && profileResponse.data.names[0].displayName;
         const emailAddress = profileResponse.data.emailAddresses && profileResponse.data.emailAddresses[0] && profileResponse.data.emailAddresses[0].value;
-
-        console.log('Google User ID:', googleId);
-        console.log('Display Name:', displayName);
-        console.log('Email Address:', emailAddress);
-         
-
-        console.log("datos para la sql:", googleId, refresh_token)
 
         await insertUser(googleId, refresh_token);
 
