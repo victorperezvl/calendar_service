@@ -1,8 +1,8 @@
-const google = require ('googleapis');
-const {getUser} = require ('../models/userModel');
+const { google } = require ('googleapis');
+const { getRefreshToken } = require ('../models/userModel');
 const { automaticAuth } = require ('./googleAuth.js');
 
-const createEvent = async (auth, eventDetails) => {
+const createEvent = async (auth, eventInfo) => {
     const calendar = google.calendar({ version: 'v3', auth });
   
     const event = {
@@ -27,15 +27,18 @@ const createEvent = async (auth, eventDetails) => {
   };
 
 
-const sendEvent = async (googleId, eventInfo) => {
+const sendEvent = async (req, res) => {
   try {
-    // 1. Obtener refresh token
-    const user = await getUser(googleId);
-    if (!user) throw new Error("Usuario no encontrado");
+    const { googleId, eventInfo } = req.body; 
 
-    const refreshToken = user.refresh_token;
+    if (!googleId || !eventInfo) {
+        return res.status(400).json({ error: "Faltan datos en la solicitud" });
+      }
 
-    // 2. Crear cliente OAuth con el token
+    const refreshToken = await getRefreshToken(googleId);
+    
+    if (!refreshToken) throw new Error("Usuario no encontrado");
+
     const oAuthClient = automaticAuth(refreshToken);
 
     const event = {
@@ -45,14 +48,15 @@ const sendEvent = async (googleId, eventInfo) => {
         endDateTime: eventInfo.endDateTime,
       };
 
-    // 4. Insertar en Google Calendar
     const createdEvent = await createEvent (oAuthClient, event);
     console.log("Evento creado:", createdEvent.htmlLink);
 
-    return createdEvent;
+    return res.status(200).json(createdEvent);
+
   } catch (error) {
     console.error("Error al crear evento en Google Calendar:", error);
-    throw error;
+    return res.status(500).json({ error: 'Error al crear el evento' });
+
   }
 };
 

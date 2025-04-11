@@ -13,12 +13,19 @@ const getUser = async (googleId) => {
 
 const getRefreshToken = async (googleId) => {
     try {
-        const [result] = await db.execute ('SELECT refresh_token FROM users WHERE google_id = ?', [googleId])
-        return result;
-
+        const [rows] = await db.execute ('SELECT refresh_token FROM users WHERE google_id = ?', [googleId])
+        
+        if (rows && rows.length > 0) {
+            
+            return rows[0].refresh_token;  
+        } else {
+            throw new Error('Refresh token no encontrado');
+        }
+        
     } catch (err) {
         throw err;
     }
+    
 };
 
 const insertUser = async (googleId, refresh_token) => {

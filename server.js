@@ -4,6 +4,8 @@ const {google} = require ('googleapis');
 const app = express();
 const router = require ('./routes/routes.js')
 
+app.use(express.json());
+
 app.get('/', (req, res) => {
     res.send('API funcionando')
 });
