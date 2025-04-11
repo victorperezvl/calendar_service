@@ -10,7 +10,7 @@ const auth = (req, res) => {
     });
 
     res.redirect(authUrl);
-}
+};
 
 const callback = async (req, res) => {
     const {code} = req.query;
@@ -37,6 +37,13 @@ const callback = async (req, res) => {
         res.status(500).send('Error al autenticar con Google');
     }
 
-}
+};
 
-module.exports = { auth, callback }
+const automaticAuth = (refreshToken) => {
+
+    oAuth2Client.setCredentials({ refresh_token: refreshToken });
+
+    return oAuth2Client;
+};
+
+module.exports = { auth, callback, automaticAuth }
