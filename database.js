@@ -2,6 +2,7 @@ const db = require ('mysql2');
 const dotenv = require ('dotenv');
 dotenv.config();
 
+//Connecion to the database
 const pool = db.createPool({
 
     host:process.env.DB_HOST,

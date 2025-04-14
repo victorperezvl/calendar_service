@@ -1,5 +1,6 @@
 const db = require ('../database');
 
+//Get for user with google id
 const getUser = async (googleId) => {
     try {
         const [result] = await db.execute ('SELECT * FROM users WHERE google_id = ?', [googleId])
@@ -11,6 +12,7 @@ const getUser = async (googleId) => {
 
 };
 
+//Gets a user's refresh token
 const getRefreshToken = async (googleId) => {
     try {
         const [rows] = await db.execute ('SELECT refresh_token FROM users WHERE google_id = ?', [googleId])
@@ -28,6 +30,7 @@ const getRefreshToken = async (googleId) => {
     
 };
 
+//Inserts a user and their refresh token into the database
 const insertUser = async (googleId, refresh_token) => {
     try {
         const [result] = await db.execute ('INSERT INTO users (google_id, refresh_token) VALUES (?, ?)', 

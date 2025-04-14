@@ -2,6 +2,7 @@ const { google } = require ('googleapis');
 const { getRefreshToken } = require ('../models/userModel');
 const { automaticAuth } = require ('./googleAuth.js');
 
+//Function that creates the event with its data
 const createEvent = async (auth, eventInfo) => {
     const calendar = google.calendar({ version: 'v3', auth });
   
@@ -27,6 +28,7 @@ const createEvent = async (auth, eventInfo) => {
   };
 
 
+ //Function that sends the event to the user's Google Calendar
 const sendEvent = async (req, res) => {
   try {
     const { googleId, eventInfo } = req.body; 

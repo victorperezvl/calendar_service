@@ -2,6 +2,7 @@ const oAuth2Client = require('./googleCLient.js');
 const {insertUser} = require ("../models/userModel");
 const {google} = require ('googleapis')
 
+//Manual client authentication to save the refresh token in the database
 const auth = (req, res) => {
     const authUrl = oAuth2Client.generateAuthUrl({
         access_type: 'offline',  
@@ -39,6 +40,7 @@ const callback = async (req, res) => {
 
 };
 
+//Automatic authentication by the API using the saved refresh token
 const automaticAuth = (refreshToken) => {
 
     oAuth2Client.setCredentials({ refresh_token: refreshToken });
