@@ -31,7 +31,15 @@ const callback = async (req, res) => {
         const displayName = profileResponse.data.names && profileResponse.data.names[0] && profileResponse.data.names[0].displayName;
         const emailAddress = profileResponse.data.emailAddresses && profileResponse.data.emailAddresses[0] && profileResponse.data.emailAddresses[0].value;
 
-        await insertUser(googleId, refresh_token);
+        if (!refresh_token) {
+            console.error("No se recibió refresh_token. Puede que el usuario ya haya autorizado antes.");
+            return res.status(400).send("No se recibió refresh_token. Intenta quitar el permiso de la app en tu cuenta de Google.");
+          }
+      
+          const encryptedToken = await encrypt(refresh_token);
+      
+
+        await insertUser(googleId, encryptedToken);
 
         res.status(200).send('Autenticación exitosa y refresh_token guardado');
     } catch (error) {
