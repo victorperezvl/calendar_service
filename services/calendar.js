@@ -1,6 +1,7 @@
 const { google } = require ('googleapis');
 const { getRefreshToken } = require ('../models/userModel');
 const { automaticAuth } = require ('./googleAuth.js');
+const { decrypt } = require ('./crypto.js');
 
 //Function that creates the event with its data
 const createEvent = async (auth, eventInfo) => {
@@ -37,9 +38,11 @@ const sendEvent = async (req, res) => {
         return res.status(400).json({ error: "Faltan datos en la solicitud" });
       }
 
-    const refreshToken = await getRefreshToken(googleId);
+    const encryptedToken = await getRefreshToken(googleId);
     
-    if (!refreshToken) throw new Error("Usuario no encontrado");
+    if (!encryptedToken) throw new Error("Usuario no encontrado");
+
+    const refreshToken = await decrypt(encryptedToken);
 
     const oAuthClient = automaticAuth(refreshToken);
 
