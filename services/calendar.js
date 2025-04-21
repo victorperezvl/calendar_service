@@ -42,7 +42,7 @@ const sendEvent = async (req, res) => {
     
     if (!encryptedToken) throw new Error("Usuario no encontrado");
 
-    const refreshToken = await decrypt(encryptedToken);
+    const refreshToken = decrypt(encryptedToken);
 
     const oAuthClient = automaticAuth(refreshToken);
 

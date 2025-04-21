@@ -36,7 +36,7 @@ const callback = async (req, res) => {
             return res.status(400).send("No se recibió refresh_token. Intenta quitar el permiso de la app en tu cuenta de Google.");
           }
       
-          const encryptedToken = await encrypt(refresh_token);
+          const encryptedToken = encrypt(refresh_token);
       
 
         await insertUser(googleId, encryptedToken);
