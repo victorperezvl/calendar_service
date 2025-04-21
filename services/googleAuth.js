@@ -1,6 +1,7 @@
 const oAuth2Client = require('./googleCLient.js');
 const {insertUser} = require ("../models/userModel");
-const {google} = require ('googleapis')
+const {google} = require ('googleapis');
+const { encrypt, decrypt } = require ('./crypto.js');
 
 //Manual client authentication to save the refresh token in the database
 const auth = (req, res) => {

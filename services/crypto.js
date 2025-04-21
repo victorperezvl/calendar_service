@@ -5,14 +5,15 @@ const secretKey = process.env.CRYPTO_KEY;
 const iv = crypto.randomBytes(16);
 
 //Encrypt
-function encryptToken(token) {
+function encrypt(token) {
   const cipher = crypto.createCipheriv(algorithm, Buffer.from(secretKey), iv);
   let encrypted = cipher.update(token);
   encrypted = Buffer.concat([encrypted, cipher.final()]);
   return iv.toString('hex') + ':' + encrypted.toString('hex');
 }
+
 //Decrypt
-function decryptToken(encryptedToken) {
+function decrypt(encryptedToken) {
   const [ivHex, encryptedHex] = encryptedToken.split(':');
   const ivBuffer = Buffer.from(ivHex, 'hex');
   const encryptedBuffer = Buffer.from(encryptedHex, 'hex');
@@ -22,3 +23,5 @@ function decryptToken(encryptedToken) {
   decrypted = Buffer.concat([decrypted, decipher.final()]);
   return decrypted.toString();
 }
+
+module.exports = { encrypt, decrypt };
